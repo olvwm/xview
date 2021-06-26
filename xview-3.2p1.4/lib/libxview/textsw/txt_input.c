@@ -193,6 +193,15 @@ textsw_gprofed_routine(view, ie)
 #endif
 
 
+static int      textsw_scroll_event();
+static int      textsw_function_key_event();
+static int      textsw_mouse_event();
+static int      textsw_edit_function_key_event();
+static int      textsw_caret_motion_event();
+static int      textsw_field_event();
+static int      textsw_file_operation();
+static int      textsw_erase_action();
+
 Pkg_private int
 textsw_process_event(view_public, ie, arg)
     Textsw_view     view_public;
@@ -200,15 +209,6 @@ textsw_process_event(view_public, ie, arg)
     Notify_arg      arg;
 {
     Pkg_private void     textsw_update_scrollbars();
-    static int      textsw_scroll_event();
-    static int      textsw_function_key_event();
-    static int      textsw_mouse_event();
-    static int      textsw_edit_function_key_event();
-    static int      textsw_caret_motion_event();
-    static int      textsw_field_event();
-    static int      textsw_file_operation();
-    static int      textsw_erase_action();
-
     int             caret_was_up;
     int             result = TEXTSW_PE_USED;
     register Textsw_view_handle view = VIEW_PRIVATE(view_public);
@@ -592,7 +592,7 @@ Return:
 #ifdef OW_I18N
 Pkg_private	int
 #else
-static int
+int
 #endif
 textsw_do_newline(view, action)
     register Textsw_view_handle view;

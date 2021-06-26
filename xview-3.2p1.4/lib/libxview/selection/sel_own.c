@@ -17,7 +17,7 @@ static char     sccsid[] = "@(#)sel_own.c 1.50 93/06/29";
 #include <X11/Xproto.h>
 #ifdef SVR4 
 #include <stdlib.h> 
-#endif SVR4
+#endif /* SVR4 */
 
 Pkg_private char *xv_sel_atom_to_str(/* display, atom */);
 Pkg_private int xv_sel_add_prop_notify_mask();
@@ -44,6 +44,8 @@ static void SendIncrMessage();
 static void SetupPropInfo();
 static void OwnerProcessIncr();
 static void RegisterSelClient();
+
+static int SendIncr(Sel_owner_info  *seln);
 
 extern XContext  selCtx;
 extern XContext  propCtx;

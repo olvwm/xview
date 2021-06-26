@@ -129,6 +129,8 @@ static Defaults_pairs line_break_pairs[] = {
 
 
 /* VARARGS0 */
+static int      textsw_edit_do_menu_action(), textsw_view_do_menu_action(),
+                textsw_find_do_menu_action();
 static void
 textsw_new_menu(folio)
     Textsw_folio    folio;
@@ -140,8 +142,6 @@ textsw_new_menu(folio)
     Frame           frame = xv_get(textsw, WIN_FRAME);
     Menu_item       break_mode_item, undo_cmds_item, find_sel_cmds_item,
                     select_field_cmds_item;
-    static int      textsw_edit_do_menu_action(), textsw_view_do_menu_action(),
-                    textsw_find_do_menu_action();
     int             index;
     Pkg_private char *textsw_get_extras_filename();
     Pkg_private int textsw_build_extras_menu_items();

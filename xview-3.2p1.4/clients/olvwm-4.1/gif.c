@@ -56,7 +56,10 @@ struct {
 	int     disposal;
 } Gif89 = { -1, -1, -1, 0 };
 
-extern XImage* ReadImage();
+static XImage* ReadImage();
+static int ReadColorMap(FILE *fd, int number, XColor *buffer);
+static int DoExtension(FILE *fd, int label);
+static int GetDataBlock(FILE *fd, unsigned char *buf);
 
 XImage *ReadGIF(dpy, fd, pNcolors, pColors)
 Display *dpy;

@@ -596,11 +596,11 @@ Notify_value
 nt_wait3_func(client, pid, status, rusage)
     CLIENT         *client;
     int             pid;
-#ifndef SVR4
+#ifndef SYSV_WAIT
     union wait     *status;
-#else SVR4
+#else /* SYSV_WAIT */
     int     *status;
-#endif SVR4
+#endif /* SYSV_WAIT */
     struct rusage  *rusage;
 {
     CONDITION      *cond;

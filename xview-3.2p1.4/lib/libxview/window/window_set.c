@@ -23,7 +23,7 @@ static char     sccsid[] = "@(#)window_set.c 20.148 93/06/28";
 #include <xview/defaults.h>
 #ifdef SVR4 
 #include <stdlib.h> 
-#endif SVR4
+#endif /* SVR4 */
 
 /*
  * Extern
@@ -52,6 +52,7 @@ Pkg_private	void	window_set_cmap_property();
 Pkg_private 	void	sync_rect();
 static     Xv_opaque 	window_set_avlist_tier2();
 static     Xv_opaque 	window_set_avlist_tier3();
+static          void    window_set_softkey_labels(Xv_Drawable_info *info, char *string);
 
 static Defaults_pairs setinput_pairs[] = {
     "select",		FALSE,
@@ -1072,7 +1073,6 @@ window_set_avlist_tier3(win_public, attrs, error, new_rect, old_rect, win_attrs,
 
       case WIN_SOFT_FNKEY_LABELS: {
         register Xv_Drawable_info 	*info;
-        static void                   	 window_set_softkey_labels();
 
         DRAWABLE_INFO_MACRO(win_public, info);
         win->softkey_flag = TRUE;

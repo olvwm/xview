@@ -361,7 +361,7 @@ and a more restricted menu appears. Selecting the
 option from the restricted menu restores the full menu
 and functionality of
 .B cmdtool.
-.R.RE
+\".R.RE
 .SS User Defined Keyboard Remapping
 The file 
 .B ~/.textswrc

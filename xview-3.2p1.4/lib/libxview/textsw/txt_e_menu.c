@@ -75,6 +75,7 @@ static	int      walk_getmenu();
 static	int      free_argv();
 static	int      Nargs;
 static	char	*check_filename_locale();
+static		any_shell_meta(char *s);
 
 extern int      EXTRASMENU_FILENAME_KEY;
 
@@ -142,6 +143,12 @@ textsw_get_extras_filename(mi)
 	    if ((result = check_filename_locale(NULL, tmp, 1)) != NULL)
 	            goto found;
 	}
+
+#if 1 /* FHS compliance - mbuck@debian.org */
+        (void) sprintf(tmp, "/etc/X11/xview/%s", EXTRASMENU);
+	if ((result = check_filename_locale(NULL, tmp, 1)) != NULL)
+		goto found;
+#endif
 
 /*#ifdef notdef*/
 	/* Gee, still?... We will try the old fashioned way */

@@ -31,12 +31,15 @@ static char     sccsid[] = "@(#)txt_filter.c 20.48 93/06/28";
 #include <signal.h>
 #include <string.h>
 
-#ifdef sparc
+#if defined(sparc) && !defined(linux)
 #ifdef SVR4
 #include <unistd.h>
 #else
 #include <vfork.h>
 #endif /* SVR4 */
+#endif
+#ifdef __linux__
+#include <unistd.h>
 #endif
 #include <sys/errno.h>
 #include <sys/ioctl.h>
@@ -59,12 +62,14 @@ static char     sccsid[] = "@(#)txt_filter.c 20.48 93/06/28";
 extern int      dtablesize_cache;
 
 #ifdef SVR4
-#define GETDTABLESIZE() \
-(dtablesize_cache?dtablesize_cache:(dtablesize_cache=(int)sysconf(_SC_OPEN_MAX)))
+#define GETDTABLESIZE_MAX() (int)sysconf(_SC_OPEN_MAX)
 #else
-#define GETDTABLESIZE() \
-(dtablesize_cache?dtablesize_cache:(dtablesize_cache=getdtablesize()))
+#define GETDTABLESIZE_MAX() getdtablesize()
 #endif /* SVR4 */
+#define GETDTABLESIZE() \
+  (dtablesize_cache ? dtablesize_cache : \
+   (dtablesize_cache = (GETDTABLESIZE_MAX() >= FD_SETSIZE \
+                        ? FD_SETSIZE : GETDTABLESIZE_MAX())))
 
 
 extern int      errno;
@@ -73,6 +78,8 @@ Xv_public char    *xv_getlogindir();
 Pkg_private Es_index textsw_do_input();
 static short unsigned type_for_filter_rec();
 static int      event_code_for_filter_rec();
+static int	talk_to_filter();
+static int	start_filter();
 
 /*
  * WARNING: this is a hack to force the variable to be in memory. this var
@@ -903,7 +910,7 @@ start_filter(filter_argv, filter_input, filter_output)
 #ifdef SVR4
     if (xv_fcntl(to_filter[OUTPUT], F_SETFL, FNDELAY) == -1)
 #else
-#if !defined(__linux) || defined(FNDELAY)
+#if !defined(__linux__) || defined(FNDELAY)
     if (fcntl(to_filter[OUTPUT], F_SETFL, FNDELAY) == -1)
 #else
     if (fcntl(to_filter[OUTPUT], F_SETFL, O_NONBLOCK) == -1)
@@ -914,7 +921,7 @@ start_filter(filter_argv, filter_input, filter_output)
 #ifdef SVR4
     if (xv_fcntl(from_filter[INPUT], F_SETFL, FNDELAY) == -1)
 #else
-#if !defined(__linux) || defined(FNDELAY)
+#if !defined(__linux__) || defined(FNDELAY)
     if (fcntl(from_filter[INPUT], F_SETFL, FNDELAY) == -1)
 #else
     if (fcntl(from_filter[INPUT], F_SETFL, O_NONBLOCK) == -1)

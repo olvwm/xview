@@ -555,7 +555,7 @@ For more information see the
 .I "DeskSet Environment Reference Guide".
 See also
 .BR xview (1).
-.RE		
+.RE
 .LP
 Only those items that are active appear 
 as normal text in the menu;

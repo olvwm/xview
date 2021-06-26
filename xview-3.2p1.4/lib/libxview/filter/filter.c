@@ -39,10 +39,9 @@ static char     sccsid[] = "@(#)filter.c 20.28 93/06/28";
 
 char           *stream_fgets();
 
-enum CharClass
-                breakProc();
-struct CharAction
-                digits();
+static enum CharClass breakProc(char c);
+static struct CharAction digits(char c);
+static any_shell_meta(char  *s);
 
 
 struct filter_rec **

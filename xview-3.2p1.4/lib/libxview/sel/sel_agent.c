@@ -12,7 +12,12 @@ static char     sccsid[] = "@(#)sel_agent.c 1.81 93/06/29";
 
 
 #include <xview/xview.h>
+/* mbuck@debian.org */
+#if 1
+#include <X11/Xlibint.h>
+#else
 #include <X11/Xlib.h>
+#endif
 #include <X11/Xutil.h>
 #include <xview/server.h>
 #include <xview/sel_svc.h>
@@ -31,10 +36,10 @@ static char     sccsid[] = "@(#)sel_agent.c 1.81 93/06/29";
  * Ultrix
  */
 #include <xview_private/ultrix_cpt.h>
-#if defined(SVR4) || defined(__linux)
+#if defined(SVR4) || defined(__linux__)
 #include <stdlib.h>
 #include <unistd.h>
-#endif SVR4
+#endif /* SVR4 */
 
 
 static void     selection_agent_process_functions();
@@ -63,6 +68,7 @@ static Seln_result seln_do_request_from_file();
 static void     selection_agent_do_function();
 static Atom 	get_atom();
 static Seln_attribute save_atom();
+static int	waitforReadableTimeout(Display *display, struct timeval *timeout);
 
 
 Xv_private Seln_result seln_convert_request_to_property();
@@ -309,7 +315,6 @@ seln_do_request_from_file(attr, context, fd, max_length, agent)
     struct stat     stat_buf;
     int             count, size;
     char           *destp;
-    extern long     lseek();
 
     if (fstat(fd, &stat_buf) != 0) {
 	perror(XV_MSG("Agent couldn't reply about a file"));
@@ -481,7 +486,7 @@ sel_get_wcs(server, selection, replier_data, length, target)
         if (bytes_remaining != 0)
             xv_error(NULL,
                 ERROR_STRING, "Property not deleted on server during selection",                0);
-#endif DEBUG
+#endif /* DEBUG */
  
 	text_prop.value = (unsigned char *) buffer;
 	text_prop.encoding = agent->targets.compound_text;
@@ -1524,12 +1529,14 @@ block(display, xevent, seconds)
 /* performance: global cache of getdtablesize() */
 extern int      dtablesize_cache;
 #ifdef SVR4
-#define GETDTABLESIZE() \
-(dtablesize_cache?dtablesize_cache:(dtablesize_cache=(int)sysconf(_SC_OPEN_MAX)))
+#define GETDTABLESIZE_MAX() (int)sysconf(_SC_OPEN_MAX)
 #else
+#define GETDTABLESIZE_MAX() getdtablesize()
+#endif /* SVR4 */
 #define GETDTABLESIZE() \
-    (dtablesize_cache?dtablesize_cache:(dtablesize_cache=getdtablesize()))
-#endif SVR4
+  (dtablesize_cache ? dtablesize_cache : \
+   (dtablesize_cache = (GETDTABLESIZE_MAX() >= FD_SETSIZE \
+                        ? FD_SETSIZE : GETDTABLESIZE_MAX())))
 
 
 /*
@@ -1555,9 +1562,9 @@ waitforReadableTimeout(display, timeout)
 #ifndef SVR4
 	result = select(max_fds, &select_ibits,
 			(fd_set *) NULL, (fd_set *) NULL, timeout);
-#else SVR4
+#else /* SVR4 */
 	result = select(display->fd + 1, &select_ibits, NULL, NULL, timeout);
-#endif SVR4
+#endif /* SVR4 */
 	if (result == -1 && errno != EINTR)
 	{
 	    complain("Select call returned error");
@@ -1685,7 +1692,7 @@ convert_attr_to_target(dpy, agent, attr)
 	return get_atom(dpy, agent->xid, FIRST_WC(&agent->targets));
     if (attr == SELN_REQ_LAST_WC)
 	return get_atom(dpy, agent->xid, LAST_WC(&agent->targets));
-#endif OW_I18N
+#endif /* OW_I18N */
     if (attr == SELN_REQ_CONTENTS_PIECES)
 	return get_atom(dpy, agent->xid, CONTENTS_PIECES(&agent->targets));
     if (attr == SELN_REQ_FIRST)

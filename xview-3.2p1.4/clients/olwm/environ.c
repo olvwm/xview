@@ -131,7 +131,7 @@ putDisplayEnv(env,dpy,screen)
 		len = colon - display;
 	}
 
-	(void)sprintf(value,"%.*s.%d",len,display,screen);
+	(void)sprintf(value,"%*s.%d",len,display,screen);
 
 	putEnv(env,"DISPLAY",value);
 }

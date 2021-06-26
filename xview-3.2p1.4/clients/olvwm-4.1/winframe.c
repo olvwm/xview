@@ -84,6 +84,7 @@ void FrameUpdateShape();
 static void setIMStatusText();
 #endif
 static void updateResizePositions();
+static int headerHeight(Client *cli, Graphics_info *gis);
 
 /***************************************************************************
 * sizing and decoration positioning functions
@@ -1048,7 +1049,7 @@ Client *cli;
 			   OLGX_NORMAL | TextOLGX);
 	}
 }
-#endif OW_I18N_L4
+#endif /* OW_I18N_L4 */
 
 
 
@@ -1908,7 +1909,7 @@ XWindowAttributes *paneattrs;
         /* set up the status */
         if (cli->wmDecors->flags & WMDecorationIMStatus)
                 setIMStatusText(dpy,w,panewin);
-#endif OW_I18N_L4
+#endif /* OW_I18N_L4 */
 
         /* Determine which menu should come up when menus are requested
          * for this frame. */

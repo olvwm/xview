@@ -17,12 +17,14 @@ static char     sccsid[] = "@(#)sel_util.c 1.29 93/06/28";
 #include <xview/server.h>
 #ifdef SVR4 
 #include <stdlib.h> 
-#endif SVR4
+#endif /* SVR4 */
 
 static void tvdiff();
 static void FreeMultiProp();
 static int	SelMatchReply();
 static Sel_req_tbl *SelMatchReqTbl();
+
+static int SelFindReply(Sel_reply_info *r1, Sel_reply_info *r2);
 
 Pkg_private struct timeval *
 xv_sel_cvt_xtime_to_timeval( XTime )
@@ -188,7 +190,7 @@ Window    xid;
 	list->integer = (Atom) xv_get( server, SERVER_ATOM, "INTEGER" );
 #ifdef OW_I18N
 	list->ctext = (Atom) xv_get( server, SERVER_ATOM, "COMPOUND_TEXT" );
-#endif OW_I18N
+#endif /* OW_I18N */
 	(void)XSaveContext( dpy, DefaultRootWindow(dpy), targetCtx, 
 			   (caddr_t)list );
     }

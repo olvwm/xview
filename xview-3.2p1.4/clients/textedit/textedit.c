@@ -41,7 +41,7 @@ static char sccsid[] = "@(#)textedit.c 15.50 90/05/22";
 long	textsw_store_file();
 */
 char	*getwd();
-#ifndef __linux
+#ifndef __linux__
 char *sprintf();
 #endif
 void	frame_cmdline_help();
@@ -116,6 +116,8 @@ static char	*option_names[] = {
 #define OPTION_MALLOC_DEBUG_LEVEL	(1<<14)
 #define OPTION_EDIT_LOG_WRAPS_AT	(1<<15)
 #endif
+
+static die(char *msg1,char *msg2,char *msg3);
 
 #ifdef TEXTEDIT_HELP_STRING
 static char	*help_msg()
@@ -416,10 +418,10 @@ main(argc, argv)
 	} else {
 	    moncontrol(0);
 	}
-#endif	GPROF
+#endif	/* GPROF */
 	textedit_main(argc, argv);
 }
-#endif	(defined(STANDALONE) || defined(DEBUG) || defined(GPROF))
+#endif	/* (defined(STANDALONE) || defined(DEBUG) || defined(GPROF)) */
 
 textedit_main(argc, argv)
 	int	  argc;
@@ -820,10 +822,10 @@ textedit_main(argc, argv)
 	 * Setup signal handlers.
 	 */
 	(void)notify_set_signal_func(base_frame, mysigproc, SIGINT,  NOTIFY_ASYNC);
-#if !defined(__linux) || defined(SIGXCPU)
+#if !defined(__linux__) || defined(SIGXCPU)
 	(void)notify_set_signal_func(base_frame, mysigproc, SIGXCPU, NOTIFY_ASYNC);
 #endif
-#if !defined(__linux) || defined(SIGBUS)
+#if !defined(__linux__) || defined(SIGBUS)
 	(void)notify_set_signal_func(base_frame, mysigproc, SIGBUS,  NOTIFY_ASYNC);
 #endif
 	(void)notify_set_signal_func(base_frame, mysigproc, SIGHUP,  NOTIFY_ASYNC);
@@ -911,7 +913,7 @@ mysigproc(me, sig, when)
 	char			 name_to_use[MAXNAMLEN];
 	int			 pid = getpid();
 	int			 was_SIGILL = (sig == SIGILL);
-#ifndef __linux
+#ifndef __linux__
 	struct sigvec vec;
 #else
 	struct sigaction vec;
@@ -940,6 +942,11 @@ mysigproc(me, sig, when)
 	(void)fflush(stderr);
 	if (textsw_store_file(textsw, name_to_use, 0, 0) == 0)
 	    goto Done;
+#ifdef XVIEW_USE_INSECURE_TMPFILES
+	/* This is insecure use of /tmp. So we try to save to $HOME and if that
+	 * fails, give up.
+	 */
+	/* martin.buck@bigfoot.com */
 	(void)sprintf(name_to_use, "/usr/tmp/textedit.%d", pid);
 	(void)fprintf(stderr, "failed!\nAttempting Store to %s ... ", name_to_use);
 	(void)fflush(stderr);
@@ -948,6 +955,11 @@ mysigproc(me, sig, when)
 	(void)sprintf(name_to_use, "/tmp/textedit.%d", pid);
 	(void)fprintf(stderr, "failed!\nAttempting Store to %s ... ", name_to_use);
 	(void)fflush(stderr);
+#else
+	(void)sprintf(name_to_use, "%s/textedit.%d", xv_getlogindir(), pid);
+	(void)fprintf(stderr, "failed!\nAttempting Store to %s ... ", name_to_use);
+	(void)fflush(stderr);
+#endif
 	if (textsw_store_file(textsw, name_to_use, 0, 0) == 0)
 	    goto Done;
 	(void)fprintf(stderr, "failed!\nSorry, cannot save your edits: ");
@@ -962,30 +974,46 @@ Die:
 #ifndef lint
 	    char	dummy, *bad_ptr = 0;
 	    /* (void)signal(SIGSEGV, SIG_DFL);	/* Make sure 0 deref dumps. */
-#ifndef __linux
+#ifndef __linux__
 	    vec.sv_handler = SIG_DFL;
 	    vec.sv_mask = vec.sv_onstack = 0;
 	    sigvec(SIGSEGV, &vec, 0);
 #else
 	    vec.sa_handler = SIG_DFL;
+#if 1
+/* martin.buck@bigfoot.com */
+            sigemptyset(&vec.sa_mask);
+#else
 	    vec.sa_mask = 0;
+#endif
 	    vec.sa_flags = 0;
+/* mbuck@debian.org */
+#if 0
 	    vec.sa_restorer = NULL;
+#endif
 	    sigaction(SIGSEGV, &vec, (struct sigaction *)0);
 #endif
 	    dummy = *bad_ptr;
 #endif
 	} else {
 	    /* (void)signal(SIGILL, SIG_DFL);	/* Make sure abort() dumps. */
-#ifndef __linux
+#ifndef __linux__
             vec.sv_handler = SIG_DFL; 
 	    vec.sv_mask = vec.sv_onstack = 0; 
             sigvec(SIGILL, &vec, 0);
 #else
 	    vec.sa_handler = SIG_DFL;
+#if 1
+/* martin.buck@bigfoot.com */
+            sigemptyset(&vec.sa_mask);
+#else
 	    vec.sa_mask = 0;
+#endif
 	    vec.sa_flags = 0;
+/* mbuck@debian.org */
+#if 0
 	    vec.sa_restorer = NULL;
+#endif
 	    sigaction(SIGILL, &vec, (struct sigaction *)0);
 #endif
 	    abort();

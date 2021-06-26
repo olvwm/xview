@@ -39,6 +39,8 @@
 
 #define do_hash(key, table) (*table->hash)(key, table->num_bins)
 
+static rehash(st_table *table);
+
 /*#define do_hash(key, table)\
     ((table->hash == ST_PTRHASH) ? (((int) (key) >> 2) % table->num_bins) :\
 	(table->hash == ST_NUMHASH) ? ((int) (key) % table->num_bins) :\

@@ -29,7 +29,7 @@ Xv_public char xv_iso_select;
 /*
  * Table containing valid values for OpenWindows.KeyboardCommands resource
  */
-#ifndef __linux
+#ifndef __linux__
 Xv_private_data Defaults_pairs xv_kbd_cmds_value_pairs[4];
 #else
 /* Global already defined and initialized in server/server.c */
@@ -73,6 +73,8 @@ extern Defaults_pairs bell_types[];
 #define NOTICE_INVERT_BUTTON	1
 #define NOTICE_NORMAL_BUTTON	0
 static notice_buttons_handle	notice_get_prev_button();
+
+static int notice_quadrant(Rect	notice_screen_rect, int x, int y);
 
 /*
  * --------------------------- Externals ----------------------------

@@ -12,9 +12,10 @@ static char     sccsid[] = "@(#)tty_mapkey.c 20.41 93/06/28";
 
 #include <stdio.h>
 #include <ctype.h>
-#ifdef SVR4
+#if defined SVR4 || defined __linux__ 
 #include <string.h>
 #endif
+#include <unistd.h> /* for access(2) - mbuck@debian.org */
 #include <sys/types.h>
 #include <sys/file.h>
 #include <sys/time.h>
@@ -34,7 +35,6 @@ static char     sccsid[] = "@(#)tty_mapkey.c 20.41 93/06/28";
 
 extern Notify_error win_post_event();
 extern char    *getenv();
-extern char    *strcpy();
 extern char    *strcat();
 
 /* static routines	 */
@@ -76,6 +76,11 @@ ttysw_readrc(ttysw)
     		char *altrc;
 
 		XV_BZERO(rc, 1024);
+#if 1 /* FHS compliance - mbuck@debian.org */
+		if (!access("/etc/X11/xview/ttyswrc", R_OK)) {
+		    (void)strcpy(rc, "/etc/X11/xview/ttyswrc");
+		} else
+#endif
 		if ((p=(char*)getenv("OPENWINHOME")) != (char *)NULL) {
 		    (void)strcpy(rc, p);
 		    (void) strcat(rc, "/lib/.ttyswrc");
@@ -508,7 +513,7 @@ ttysw_remove_caps(label, label_ptr)
  * have more time.
  */
 
-#if defined(i386) && !defined(__linux)
+#if defined(i386) && !defined(__linux__)
 static void
 ttysw_arrow_keys_to_string(xv_id, str)
     unsigned        xv_id;

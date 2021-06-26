@@ -121,6 +121,10 @@ static void     update_item_rect();
 static void     update_value_rect();
 static Xv_opaque choice_do_menu_item();
 
+static int find_choice(Item_info *ip, Event *event);
+static int modify_choice(Item_info *ip, int type, int which_choice, Xv_opaque       choice_info);
+static int move_specified(Item_info *ip, Attr_avlist avlist);
+static int re_alloc_choices(Item_info *ip, int type, Xv_opaque choices[]);
 
 static Panel_ops ops = {
     panel_default_handle_event,		/* handle_event() */

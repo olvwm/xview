@@ -92,6 +92,7 @@ typedef struct {	/* data for a gauge */
     unsigned int vertical:1;
 } Gauge_info;
 
+static int etoi();
 
 
 /* ========================================================================= */

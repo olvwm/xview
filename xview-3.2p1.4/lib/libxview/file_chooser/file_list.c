@@ -48,7 +48,7 @@ static void	flist_error(File_list_private *private, char *format, ...);
 static void	flist_error();
 #endif
 
-	
+static int flist_match_regex( char *s, File_list_private *private );
 
 /*
  * xv_create() method
@@ -426,7 +426,12 @@ file_list_get( public, status, attr, valist )
     case FILE_LIST_ROW_TYPE:
 	return xv_get( FILE_LIST_PUBLIC(private),
 		      PANEL_LIST_EXTENSION_DATA, 
+/* Alpha compatibility, mbuck@debian.org */
+#if 1
+		      va_arg(valist, int *)
+#else
 		      va_arg(valist, int)
+#endif
 		      );
 
     case FILE_LIST_DIRECTORY:
@@ -521,9 +526,9 @@ file_list_destroy ( public, status )
     if (status == DESTROY_CLEANUP) {
 	xv_free_ref( private->directory );
 	xv_free_ref( private->regex_pattern );
-#ifdef __linux
-	if (private->regex_compile != NULL && private->regex_compile->allocated)
-		xv_free_ref( private->regex_compile->buffer);
+#ifdef __linux__
+	if (private->regex_compile != NULL && private->regex_compile->__REPB_PREFIX(allocated))
+		xv_free_ref( private->regex_compile->__REPB_PREFIX(buffer));
 #endif
 	xv_free_ref( private->regex_compile );
 	xv_free_ref( private->dotdot_string );
@@ -1142,7 +1147,7 @@ flist_update_list( private, rows, num_rows )
 
 /****************************************************************************/
 
-#ifndef __linux
+#ifndef __linux__
 /*
  * Front end to regexp(3).
  *
@@ -1213,7 +1218,7 @@ flist_match_regex( s, private )
     return step(s, private->regex_compile);
 }
 
-#else /* __linux */
+#else /* __linux__ */
 
 /* Linux does not have regexp.h or compile()/step(). Use regex.h and
  * re_compile_pattern()/re_match() instead. */
@@ -1225,11 +1230,11 @@ flist_compile_regex( private )
 
     if (private->regex_compile == NULL) {
         private->regex_compile = xv_alloc_n(regex_t, 1);
-        private->regex_compile->translate = NULL;
+        private->regex_compile->__REPB_PREFIX(translate) = NULL;
     }
-    if (private->regex_compile->allocated == 0) {
-        private->regex_compile->buffer = xv_alloc_n(char, MAXPATHLEN + 1);
-        private->regex_compile->allocated = MAXPATHLEN + 1;
+    if (private->regex_compile->__REPB_PREFIX(allocated) == 0) {
+        private->regex_compile->__REPB_PREFIX(buffer) = xv_alloc_n(char, MAXPATHLEN + 1);
+        private->regex_compile->__REPB_PREFIX(allocated) = MAXPATHLEN + 1;
     }
     re_compile_pattern(private->regex_pattern, strlen(private->regex_pattern),
 			private->regex_compile);
@@ -1240,11 +1245,11 @@ flist_match_regex( s, private )
      char *s;
      File_list_private *private;
 {
-    if (private->regex_compile == NULL || private->regex_compile->allocated == 0)
+    if (private->regex_compile == NULL || private->regex_compile->__REPB_PREFIX(allocated) == 0)
         return 0;
     return (re_match(private->regex_compile, s, strlen(s), 0, NULL) != -1);
 }
-#endif /* __linux */
+#endif /* __linux__ */
 /****************************************************************************/
 
 

@@ -17,16 +17,15 @@ static char     sccsid[] = "@(#)sel_req.c 1.43 93/06/29";
 #include <xview/notify.h>
 #include <sys/time.h>
 
-#if defined(SVR4) || defined(__linux)
+#if defined(SVR4) || defined(__linux__)
 #include <stdlib.h> 
-#endif SVR4
+#endif /* SVR4 */
 
 
 #define ITIMER_NULL  ((struct itimercal *)0)
 
 
 Pkg_private char *xv_sel_atom_to_str(/* display, atom */);
-Pkg_private XID SelGetOwnerXID(/* selReq */);
 Pkg_private Atom xv_sel_str_to_atom(/* display, string */);
 Pkg_private int xv_sel_add_prop_notify_mask();
 Pkg_private Atom xv_sel_get_property();
@@ -56,6 +55,11 @@ static int GetSelection();
 static int ProcessReply();
 static Requestor *SelGetReq();
 
+static int XvGetRequestedValue();
+static XID SelGetOwnerXID(Sel_req_info *selReq);
+static int ProcessNonBlkIncr(Sel_req_info *selReq, Sel_reply_info *reply, XSelectionEvent *ev, Atom target);
+static int ProcessReq(Requestor *req, XPropertyEvent *ev);
+static int OldPkgIsOwner(Display *dpy, Atom selection, Window xid, Sel_reply_info *reply, Sel_req_info *selReq);
 
 /*ARGSUSED*/
 Pkg_private int

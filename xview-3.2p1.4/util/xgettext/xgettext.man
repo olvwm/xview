@@ -30,7 +30,7 @@ xgettext \- conditionally extract strings from C programs
 .I filename \|.\|.\|.
 ]
 .br
-... gwen please check indexes.
+.\"... gwen please check indexes.
 .IX xgettext "" "\fLxgettext\fP \(em conditionally extract strings"
 .IX messages "conditionally extract strings" "" "conditionally extract strings"
 .SH DESCRIPTION

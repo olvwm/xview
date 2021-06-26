@@ -24,7 +24,12 @@ static char     sccsid[] = "@(#)server.c 20.157 93/04/28";
 #include <xview/notify.h>
 #include <xview/win_notify.h>
 #include <xview/defaults.h>
+/* mbuck@debian.org */
+#if 1
+#include <X11/Xlibint.h>
+#else
 #include <X11/Xlib.h>
+#endif
 #include <xview_private/portable.h>
 #include <xview_private/svr_atom.h>
 #include <xview_private/svr_impl.h>
@@ -57,6 +62,8 @@ static char     sccsid[] = "@(#)server.c 20.157 93/04/28";
 #ifdef _XV_DEBUG
 Xv_private_data int server_gather_stats;
 #endif
+
+static int		 xv_set_scheduler();
 
 static void		 load_kbd_cmds();
 static void     	 server_init_atoms();
@@ -91,7 +98,6 @@ Xv_private int 	    	 xv_has_been_initialized();
 Xv_private void 	 server_refresh_modifiers();
 
 extern char	    	*setlocale();
-char		    	*strdup();
 XrmDatabase 	    	 XrmGetFileDatabase();
 static Notify_func 	 default_scheduler;
 extern XrmDatabase  	 defaults_rdb;
@@ -100,7 +106,7 @@ extern char    		*getenv();
 Xv_private_data char 	*xv_shell_prompt;
 
 /* global default server parameters */
-#ifndef __linux
+#ifndef __linux__
 Xv_private_data Xv_Server xv_default_server;
 Xv_private_data Xv_Screen xv_default_screen;
 Xv_private_data Display *xv_default_display;
@@ -774,10 +780,21 @@ server_init(parent, server_public, avlist)
      */
 
     /* Used by atom mgr */
+#if 1
+    /* Avoid crash with newer xcb-based xlibs. According to 
+     * http://lists.freedesktop.org/archives/xorg/2007-November/030388.html
+     * using XAllocID() this way only worked by chance so far, so use
+     * XAllocIDs() instead which should be safe.
+     *
+     * mbuck@debian.org
+     */
+    XAllocIDs((Display *)server->xdisplay, server->atom_mgr, sizeof(server->atom_mgr) / sizeof(*server->atom_mgr));
+#else
     server->atom_mgr[ATOM] = (XID) XAllocID((Display *)server->xdisplay);
     server->atom_mgr[NAME] = (XID) XAllocID((Display *)server->xdisplay);
     server->atom_mgr[TYPE] = (XID) XAllocID((Display *)server->xdisplay);
     server->atom_mgr[DATA] = (XID) XAllocID((Display *)server->xdisplay);
+#endif
 
     /* Key for XV_KEY_DATA.  Used in local dnd ops. */
     server->dnd_ack_key = xv_unique_key();

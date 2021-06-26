@@ -105,12 +105,12 @@ typedef ei_plain_text_object *Eipt_handle;
 #ifdef OW_I18N
 #define ISCNTRL(c)		((c >= 0) && iswcntrl(c))
 #else
-#ifndef __linux
+#ifndef __linux__
 #define ISCNTRL(c)		((128 <= c && c <= 159) || (iscntrl(c)))
 #else
 /* Linux: Allow 8-bit chars (do not treat them as control chars) */
 #define ISCNTRL(c)		(c < 32)
-#endif /* __linux */
+#endif /* __linux__ */
 #endif
 
 Pkg_private Ei_handle ei_plain_text_create();
@@ -126,6 +126,7 @@ static void	ei_plain_text_set_dummy_char();
 #endif
 static struct ei_span_result ei_plain_text_span_of_group();
 static struct ei_process_result ei_plain_text_expand();
+static paint_batch();
 
 struct ei_ops   ei_plain_text_ops = {
     ei_plain_text_destroy,
@@ -734,7 +735,7 @@ Rescan:
 	    }
 	    batch++;
 	} else {
-#ifdef __linux
+#ifdef __linux__
 /* Problems with 8-bit characters: 'aring' (0xe5) causes coredump in textedit
  * because it's regarded as ISCNTRL(), leading to 'special_char 'getting a
  * value > 255, leading to out-of-bound access of tempPf->pf_char[c]. Fix

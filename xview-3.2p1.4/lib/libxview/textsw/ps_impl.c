@@ -62,6 +62,9 @@ static Es_index ps_read(), ps_scratch_read();
 static Es_index ps_replace(), ps_scratch_replace();
 static int      ps_set();
 
+static copy_pieces();
+static int	get_current_offset(Piece_table private);
+
 static Es_index write_header_etc();
 
 static struct es_ops ps_ops = {
@@ -1575,7 +1578,7 @@ ps_undo_to_mark(esh, mark, notify_proc, notify_data)
     private->last_write_plus_one = ES_INFINITY;
 }
 
-static          caddr_t
+caddr_t
 #ifdef ANSI_FUNC_PROTO
 ps_get(Es_handle esh, Es_attribute attribute, ...)
 #else

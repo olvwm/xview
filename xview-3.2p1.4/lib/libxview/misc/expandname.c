@@ -22,17 +22,20 @@ static char     sccsid[] = "@(#)expandname.c 20.24 93/06/28";
 #include <stdio.h>
 #include <string.h>
 
-#ifdef sparc
+#if defined(sparc) && !defined(linux)
 #ifdef SVR4
 #include <unistd.h>
 #else
 #include <vfork.h>
-#endif SVR4
+#endif /* SVR4 */
+#endif
+#ifdef __linux__
+#include <unistd.h>
 #endif
 
 #ifdef SVR4
 #include <sys/signal.h>
-#endif SVR4
+#endif /* SVR4 */
 #include <xview_private/i18n_impl.h>
 #include <xview_private/portable.h>
 #include <xview/expandname.h>
@@ -118,11 +121,11 @@ xv_expand_name(name)
 	length += status;
     }
     (void) close(pivec[0]);
-#ifndef SVR4
+#ifndef SYSV_WAIT
     while (wait((union wait *) & status) != pid);
-#else SVR4
+#else /* SYSV_WAIT */
     while (wait( & status) != pid);
-#endif SVR4
+#endif /* SYSV_WAIT */
     ;
     status &= 0377;
     if (status != 0 && status != SIGPIPE) {

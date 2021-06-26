@@ -161,7 +161,7 @@ Notify_value
 sigchldcatcher(client, pid, status, rusage)
 Notify_client client; /* the client noted in main() */
 int pid; /* the pid that died */
-#ifdef SVR4
+#ifdef SYSV_WAIT
 int *status;
 #else
 union wait *status; /* the status of the process (unused here) */
@@ -169,13 +169,11 @@ union wait *status; /* the status of the process (unused here) */
 struct rusage *rusage; /* resources used by this process (unused) */
 {
     if (WIFEXITED(*status)) {
-        printf("Process termined with status %d\n", 
-#ifdef SVR4
-		*status
+#ifdef SYSV_WAIT
+        printf("Process termined with status %d\n", *status);
 #else
-		status->w_retcode
+        printf("Process termined with status %d\n", status->w_retcode);
 #endif
-	);
         /* unregister input func with appropriate file descriptor */
         notify_set_input_func(client, NOTIFY_FUNC_NULL,
             (client == client1)? pipe_io[1][0] : 0);

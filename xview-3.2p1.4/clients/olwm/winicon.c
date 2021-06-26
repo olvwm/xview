@@ -43,6 +43,10 @@ extern 	Bool	PropGetWMIconName();
 /* Class function vector */
 static ClassIconFrame classIconFrame;
 
+static int heightTopIcon(WinIconFrame *win);
+static int heightBottomIcon(WinIconFrame *win);
+static int widthBothIcon(WinIconFrame *win);
+
 /***************************************************************************
 * private event functions
 ***************************************************************************/

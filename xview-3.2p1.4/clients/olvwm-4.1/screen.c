@@ -5,7 +5,7 @@
  */
 
 #ifdef IDENT
-#ident	"@(#)screen.c	1.7 olvwm version 09 Feb 1994"
+#ident	"@(#)screen.c	1.8 olvwm version 04/28/99"
 #endif
 
 /*
@@ -152,6 +152,14 @@ static XrmQuark virtualGridCQ;
 static XrmQuark virtualGridIQ;
 static XrmQuark virtualPixmapColorCQ;
 static XrmQuark virtualPixmapColorIQ;
+
+static updateScreenWorkspaceColor(Display *dpy, ScreenInfo *scrInfo);
+static updateScreenWindowColor(Display *dpy, ScreenInfo *scrInfo);
+static updateScreenForegroundColor(Display *dpy, ScreenInfo *scrInfo);
+static updateScreenBackgroundColor(Display *dpy, ScreenInfo *scrInfo);
+static updateScreenBorderColor(Display *dpy, ScreenInfo *scrInfo);
+static updateScreenInputFocusColor(Display *dpy, ScreenInfo *scrInfo);
+static updateScreenGlyphFont(Display *dpy, ScreenInfo *scrInfo);
 
 /*-------------------------------------------------------------------------
  *	Local Functions

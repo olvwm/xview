@@ -45,7 +45,7 @@
 #include "error.h"
 #include "dsdm.h"
 
-#if defined(__linux) && !defined(MAXPID)
+#if defined(__linux__) && !defined(MAXPID)
 #define MAXPID 32767
 #endif
 
@@ -619,7 +619,7 @@ ExitOLWM()
 static void
 handleChildSignal()
 {
-#ifdef __linux
+#ifdef __linux__
 /* Reinitialize signal catcher */
 	signal(SIGCHLD, handleChildSignal);
 #endif
@@ -634,7 +634,7 @@ handleChildSignal()
 void
 ReapChildren()
 {
-#ifdef SYSV
+#if defined(SYSV) || defined(__linux__)
         pid_t pid;
         int status;
 #else
@@ -645,7 +645,7 @@ ReapChildren()
 
 	if (!deadChildren)
 		return;
-#ifdef SYSV
+#if defined(SYSV) || defined(__linux__)
 	sighold(SIGCHLD);
 #else
 	oldmask = sigblock(sigmask(SIGCHLD));
@@ -655,7 +655,7 @@ ReapChildren()
 
 	while (1) {
 
-#ifdef SYSV
+#if defined(SYSV) || defined(__linux__)
                 pid = waitpid(-1, &status, WNOHANG);
 #else
                 pid = wait3(&status, WNOHANG, (struct rusage *)0);
@@ -682,7 +682,7 @@ ReapChildren()
 
 	deadChildren = False;
 
-#ifdef SYSV
+#if defined(SYSV) || defined(__linux__)
 	sigrelse(SIGCHLD);
 #else
         (void) sigsetmask(oldmask);

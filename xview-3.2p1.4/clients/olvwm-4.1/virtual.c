@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
+#include <math.h>
 #include <sys/param.h>
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
@@ -23,25 +24,53 @@
 #include "globals.h"
 #include "win.h"
 #include "menu.h"
-#include "math.h"
 #include "virtual.h"
 #include "patchlevel.h"
 
 #include "vdm.icon"
 #include "vdm.mask"
 
+#if defined(__linux__) && defined(__GLIBC__) && 0
+/* GNU libc doesn't use INIT, so we have to define sp ourselves. We have to
+ * initialize it as well before we call compile(). Maybe this is a bug in
+ * GNU libc, but I couldn't care less...
+ *
+ * NEWS: As of glibc 2.0.5c, GNU libc does use INIT, but it calls the first
+ * argument of compile __instring instead of instring. Sigh. Whoever designed
+ * this regexp API deserves to be shot immediately, if you ask me.
+ *
+ * MORE NEWS: glibc 2.0.6 seems to do this right, so I added a && 0
+ * above to disable my patches. Remove it if you have an older glibc.
+ *
+ * martin.buck@bigfoot.com
+ */
+/*char *sp;*/
+#define INIT   register char *sp = __instring;
+#else
 #define INIT   register char *sp = instring;
+#endif
 #define GETC() (*sp++)
 #define PEEKC()     (*sp)
 #define UNGETC(c)   (--sp)
 #define RETURN(c)   return;
-#define ERROR(val)  regerr(val)
+static regexp_err(int val);
+#define ERROR(val)  regexp_err(val)
 #define TRUE 1
 #define FALSE 0
 
+#if 1
+#include <regex.h>
+#define POSIX_REGEXP
+#else
 #include <regexp.h>
+#endif
+
 #ifdef REGEXP
 regexp *expbuf;
+#elif defined(POSIX_REGEXP)
+static regex_t expbuf;
+#else
+static char expbuf[256];
 #endif
 
 #ifdef IDENT
@@ -93,6 +122,9 @@ static unsigned char pixdata[] = { 0xaa, 0x55 };
 		       ButtonMotionMask | ExposureMask )
 
 #define CEIL(a,b)	(((a)+(b)-1)/(b))
+
+static rexMatch(char *string);
+static rexInit(char *pattern);
 
 /*
  * ==========================================================================
@@ -1165,6 +1197,23 @@ static XTextProperty	iName = {(unsigned char *) "Desktop",
 		       v->client->scrInfo->vdm->resources->geometry);
     VirtualSetGeometry(v->client->iconwin,
 		       v->client->scrInfo->vdm->resources->iconGeometry);
+#if 1
+/* If a geometry for the virtual desktop icon was specified, treat the icon as
+ * if it was positioned manually. This ensures that it never gets placed
+ * automatically, even if FreeIconSlots is set. Unfortunately,
+ * VirtualSetGeometry() doesn't tell us whether the geometry spec was valid,
+ * so we have to check ourselves...
+ *
+ * <mbuck@debian.org>
+ */
+{
+    int changed, dummy;
+    changed = XParseGeometry(v->client->scrInfo->vdm->resources->iconGeometry, &dummy, &dummy, &dummy, &dummy);
+    if (changed & (XValue | YValue)) {
+	v->client->iconwin->fManuallyPositioned = True;
+    }
+}
+#endif
 
     XFree((char *) sizeHints);
     XFree((char *) wmHints);
@@ -2060,8 +2109,7 @@ int		slot;
 				MenuInfoCreate(cache, winInfo, menu, depth, slot);
 }
 
-static
-regerr(val)
+static regexp_err(val)
 int val;
 {
     switch(val) {
@@ -2108,14 +2156,14 @@ int val;
     }
 }
 
-static char expbuf[256];
-
 static
 rexMatch(string)
     char *string;
 {
 #ifdef REGEXP
     return regexec(expbuf, string);
+#elif defined(POSIX_REGEXP)
+    return !regexec(&expbuf, string, 0, NULL, 0);
 #else
     return step(string,expbuf);
 #endif
@@ -2153,7 +2201,16 @@ char newPattern[256];
     newPattern[j++] = '\0';
 #ifdef REGEXP
     expbuf = regcomp(newPattern);
+#elif defined(POSIX_REGEXP)
+    regcomp(&expbuf, newPattern, 0);
 #else
+#if defined(__linux__) && defined(__GLIBC__)
+    /* See comment above.
+     *
+     * martin.buck@bigfoot.com
+     */
+/*    sp = newPattern;*/
+#endif
     compile(newPattern, expbuf, &expbuf[256], '\0');
 #endif
 }

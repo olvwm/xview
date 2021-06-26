@@ -24,7 +24,8 @@ static char     sccsid[] = "@(#)txt_selsvc.c 20.64 93/06/29";
 #include <stdlib.h>
 #endif /* SVR4 */
 
-extern int      errno;
+
+static int textsw_should_ask_seln_svc(Textsw_folio textsw);
 
 Pkg_private Es_status es_copy();
 static Seln_result textsw_seln_yield();

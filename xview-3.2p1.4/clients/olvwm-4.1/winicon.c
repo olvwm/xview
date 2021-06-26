@@ -52,6 +52,10 @@ static ClassIconFrame classIconFrame;
 * forward-declared functions
 ***************************************************************************/
 
+static int heightTopIcon(WinIconFrame *win);
+static int heightBottomIcon(WinIconFrame *win);
+static int widthBothIcon(WinIconFrame *win);
+
 /***************************************************************************
 * private event functions
 ***************************************************************************/

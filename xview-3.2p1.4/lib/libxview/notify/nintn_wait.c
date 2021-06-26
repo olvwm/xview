@@ -22,11 +22,11 @@ extern          Notify_value
 notify_next_wait3_func(nclient, pid, status, rusage)
     Notify_client   nclient;
     int             pid;
-#ifndef SVR4
+#ifndef SYSV_WAIT
     union wait     *status;
-#else SVR4
+#else /* SYSV_WAIT */
     int *status;
-#endif SVR4
+#endif /* SYSV_WAIT */
     struct rusage  *rusage;
 {
     Notify_func     func;

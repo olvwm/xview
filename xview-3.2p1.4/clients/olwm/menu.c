@@ -109,6 +109,7 @@ static Bool isClick();
 int MenuTrack();
 void DrawLocCursor();
 
+static Bool isEnabled(MenuInfo *mInfo, int item);
 
 /*
  *****************************************************************************

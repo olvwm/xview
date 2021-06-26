@@ -39,6 +39,18 @@ extern int  DndContactDSDM();
 extern int  DndFindSite();
 extern XID  DndGetCursor();
 
+static int SendTrigger(
+    Dnd_info		*dnd,
+    Xv_Drawable_info	*info,
+    XButtonEvent 	*buttonEvent,
+    int			 local);
+static int SendOldDndEvent(Dnd_info *dnd, XButtonEvent *buttonEvent);
+static void UpdateGrabCursor(Dnd_info *dnd, int type);
+static void UpdateGrabCursor(Dnd_info *dnd, int type);
+static int WaitForAck(Dnd_info *dnd, Xv_Drawable_info *info);
+static int IsV2App(Display *dpy, Window window, Dnd_info *dnd, XButtonEvent *ev);
+
+
 Xv_public int
 dnd_send_drop(dnd_public)
     Xv_object	 dnd_public;

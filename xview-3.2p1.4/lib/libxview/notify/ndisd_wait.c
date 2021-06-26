@@ -22,11 +22,11 @@ extern          Notify_value
 notify_default_wait3(client, pid, status, rusage)
     Notify_client   client;
     int             pid;
-#ifndef SVR4
+#ifndef SYSV_WAIT
     union wait     *status;
-#else SVR4
+#else /* SYSV_WAIT */
     int *status;
-#endif SVR4
+#endif /* SYSV_WAIT */
     struct rusage  *rusage;
 {
     return (NOTIFY_IGNORED);

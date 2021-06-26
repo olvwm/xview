@@ -104,6 +104,9 @@ Panel_item      sel_line_panel_items[MAX_SEL_LINE_PANEL_ITEMS];
 Pkg_private     open_cmd_proc();
 Pkg_private     include_cmd_proc();
 Pkg_private     save_cmd_proc();
+static void     add_exten_item();
+static void     show_dot_files_proc();
+static int      fc_exten_func();
 
 static Notify_value
 textsw_popup_destroy_func(client, status)
@@ -135,7 +138,6 @@ textsw_create_popup_frame(view, popup_type)
     Frame           popup_frame, base_frame;
     Panel           panel = NULL;
     char           *label;
-    void            add_exten_item();
 #ifdef OW_I18N
     int		    win_use_im = ((popup_type != TEXTSW_MENU_SEL_MARK_TEXT) &&
 				  (popup_type != TEXTSW_MENU_NORMALIZE_LINE));
@@ -502,8 +504,6 @@ add_exten_item( fc )
     int frame_width;
     int frame_height;
     Panel_item item;
-    void show_dot_files_proc();
-    int  fc_exten_func();
  
     
     panel = xv_get(fc, FRAME_CMD_PANEL);

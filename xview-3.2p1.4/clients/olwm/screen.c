@@ -111,6 +111,12 @@ static XrmQuark reverseVideoIQ;
 static XrmQuark stippledRubberBandsCQ;
 static XrmQuark stippledRubberBandsIQ;
 
+static updateScreenWorkspaceColor(Display *dpy, ScreenInfo *scrInfo);
+static updateScreenWindowColor(Display *dpy, ScreenInfo*scrInfo);
+static updateScreenForegroundColor(Display *dpy, ScreenInfo *scrInfo);
+static updateScreenBackgroundColor(Display *dpy, ScreenInfo *scrInfo);
+static updateScreenBorderColor(Display *dpy, ScreenInfo *scrInfo);
+static updateScreenGlyphFont(Display *dpy, ScreenInfo *scrInfo);
 
 /*-------------------------------------------------------------------------
  *	Local Functions

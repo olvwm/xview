@@ -14,6 +14,7 @@ static char     sccsid[] = "@(#)ttyansi.c 20.43 93/06/28";
 #include <xview/xv_i18n.h>
 #endif
 #include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/signal.h>
@@ -31,7 +32,6 @@ static char     sccsid[] = "@(#)ttyansi.c 20.43 93/06/28";
 
 #include <xview/sel_attrs.h>
 
-char           *strncpy();
 char           *textsw_checkpoint_undo();
 Textsw_index    textsw_replace_i18n(), textsw_erase_i18n();
 
@@ -48,7 +48,7 @@ int             tty_new_cursor_row, tty_new_cursor_col;
 #define ERROR_RETURN(val)	return(val);
 #endif				/* DEBUG */
 
-#ifndef __linux
+#ifndef __linux__
 #define notcontrol(c)	(((c&0177) >= ' ') && (c != '\177'))
 #else
 #define notcontrol(c)	((c >= ' ') && (c != '\177'))
@@ -81,6 +81,10 @@ int             ttysw_right;	/* right column of window */
 int scroll_bottom = 0; /* to implement scroll region change */
 int pre_edit_rows_scrolled; /* updated in ansi_lf, used in ttysw callbacks */
 #endif
+
+static int send_input_to_textsw(Textsw textsw, CHAR *buf, long buf_len, Textsw_index end_transcript);
+static int ansi_lf(Ttysw_view_handle ttysw_view, CHAR *addr, int len);
+static int ansi_char(Ttysw_view_handle ttysw_view, CHAR *addr, int olen);
 
 /*
  * Interpret a string of characters of length <len>.  Stash and restore the
