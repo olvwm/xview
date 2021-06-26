@@ -1,0 +1,52 @@
+Description: Use POSIX regular expression API in olvwm.
+ Do not use the regexp.h functions, which are not available in current
+ glibc.
+
+--- xview-3.2p1.4.orig/clients/olvwm-4.1/virtual.c
++++ xview-3.2p1.4/clients/olvwm-4.1/virtual.c
+@@ -58,9 +58,19 @@ static regexp_err(int val);
+ #define TRUE 1
+ #define FALSE 0
+ 
++#if 1
++#include <regex.h>
++#define POSIX_REGEXP
++#else
+ #include <regexp.h>
++#endif
++
+ #ifdef REGEXP
+ regexp *expbuf;
++#elif defined(POSIX_REGEXP)
++static regex_t expbuf;
++#else
++static char expbuf[256];
+ #endif
+ 
+ #ifdef IDENT
+@@ -2146,14 +2156,14 @@ int val;
+     }
+ }
+ 
+-static char expbuf[256];
+-
+ static
+ rexMatch(string)
+     char *string;
+ {
+ #ifdef REGEXP
+     return regexec(expbuf, string);
++#elif defined(POSIX_REGEXP)
++    return !regexec(&expbuf, string, 0, NULL, 0);
+ #else
+     return step(string,expbuf);
+ #endif
+@@ -2191,6 +2201,8 @@ char newPattern[256];
+     newPattern[j++] = '\0';
+ #ifdef REGEXP
+     expbuf = regcomp(newPattern);
++#elif defined(POSIX_REGEXP)
++    regcomp(&expbuf, newPattern, 0);
+ #else
+ #if defined(__linux__) && defined(__GLIBC__)
+     /* See comment above.

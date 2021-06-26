@@ -1,0 +1,6 @@
+debian-changes-3.2p1.4-26
+display_setting
+olvwm-posix-regex.patch
+xview-sysv-wait-and-signals.patch
+xview-shelltool-manpage-cpp-compatibility.patch
+xview-FD_SETSIZE.patch

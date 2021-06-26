@@ -1,0 +1,118 @@
+Description: Limit number of file descriptors used for select() to FD_SETSIZE.
+ The GETDTABLESIZE macro is used to determine the maximum file
+ descriptor that can be used with select().  On Linux, the upper limit
+ on newly-opened file descriptors (returned, equivalently, by either
+ sysconf(_SC_OPEN_MAX), getrlimit(RLIMIT_FSIZE), or getdtablesize())
+ is variable, and may be greater than the size of the 'fd_set'
+ structure.  In particular, systemd apparently sets the limit to 65536
+ by default, whereas glibc's 'fd_set' is only 1024 bits.  Thus, the
+ macro should return either the upper limit returned by
+ getdtablesize(), or the constant FD_SETSIZE, whichever is smaller.
+
+--- xview-3.2p1.4.orig/lib/libxview/notify/ndet_fd.c
++++ xview-3.2p1.4/lib/libxview/notify/ndet_fd.c
+@@ -24,12 +24,14 @@ static char     sccsid[] = "@(#)ndet_fd.
+ /* performance: global cache of getdtablesize() */
+ extern int      dtablesize_cache;
+ #ifdef SVR4
+-#define GETDTABLESIZE() \
+-(dtablesize_cache?dtablesize_cache:(dtablesize_cache=(int)sysconf(_SC_OPEN_MAX)))
++#define GETDTABLESIZE_MAX() (int)sysconf(_SC_OPEN_MAX)
+ #else
+-#define GETDTABLESIZE() \
+-    (dtablesize_cache?dtablesize_cache:(dtablesize_cache=getdtablesize()))
++#define GETDTABLESIZE_MAX() getdtablesize()
+ #endif /* SVR4 */
++#define GETDTABLESIZE() \
++  (dtablesize_cache ? dtablesize_cache : \
++   (dtablesize_cache = (GETDTABLESIZE_MAX() >= FD_SETSIZE \
++                        ? FD_SETSIZE : GETDTABLESIZE_MAX())))
+ 
+ static int      ndet_fd_table_size;	/* Number of descriptor slots
+ 					 * available */
+--- xview-3.2p1.4.orig/lib/libxview/notify/ndisdispch.c
++++ xview-3.2p1.4/lib/libxview/notify/ndisdispch.c
+@@ -27,12 +27,14 @@ static char     sccsid[] = "@(#)ndisdisp
+ /* performance: global cache of getdtablesize() */
+ int             dtablesize_cache = 0;
+ #ifdef SVR4
+-#define GETDTABLESIZE() \
+-(dtablesize_cache?dtablesize_cache:(dtablesize_cache=(int)sysconf(_SC_OPEN_MAX)))
++#define GETDTABLESIZE_MAX() (int)sysconf(_SC_OPEN_MAX)
+ #else
+-#define GETDTABLESIZE() \
+- (dtablesize_cache?dtablesize_cache:(dtablesize_cache=getdtablesize()))
++#define GETDTABLESIZE_MAX() getdtablesize()
+ #endif /* SVR4 */
++#define GETDTABLESIZE() \
++  (dtablesize_cache ? dtablesize_cache : \
++   (dtablesize_cache = (GETDTABLESIZE_MAX() >= FD_SETSIZE \
++                        ? FD_SETSIZE : GETDTABLESIZE_MAX())))
+ 
+ pkg_private_data u_int ndis_flags = 0;
+ pkg_private_data NTFY_CLIENT *ndis_clients = 0;
+--- xview-3.2p1.4.orig/lib/libxview/sel/sel_agent.c
++++ xview-3.2p1.4/lib/libxview/sel/sel_agent.c
+@@ -1529,12 +1529,14 @@ block(display, xevent, seconds)
+ /* performance: global cache of getdtablesize() */
+ extern int      dtablesize_cache;
+ #ifdef SVR4
+-#define GETDTABLESIZE() \
+-(dtablesize_cache?dtablesize_cache:(dtablesize_cache=(int)sysconf(_SC_OPEN_MAX)))
++#define GETDTABLESIZE_MAX() (int)sysconf(_SC_OPEN_MAX)
+ #else
+-#define GETDTABLESIZE() \
+-    (dtablesize_cache?dtablesize_cache:(dtablesize_cache=getdtablesize()))
++#define GETDTABLESIZE_MAX() getdtablesize()
+ #endif /* SVR4 */
++#define GETDTABLESIZE() \
++  (dtablesize_cache ? dtablesize_cache : \
++   (dtablesize_cache = (GETDTABLESIZE_MAX() >= FD_SETSIZE \
++                        ? FD_SETSIZE : GETDTABLESIZE_MAX())))
+ 
+ 
+ /*
+--- xview-3.2p1.4.orig/lib/libxview/textsw/txt_filter.c
++++ xview-3.2p1.4/lib/libxview/textsw/txt_filter.c
+@@ -62,12 +62,14 @@ static char     sccsid[] = "@(#)txt_filt
+ extern int      dtablesize_cache;
+ 
+ #ifdef SVR4
+-#define GETDTABLESIZE() \
+-(dtablesize_cache?dtablesize_cache:(dtablesize_cache=(int)sysconf(_SC_OPEN_MAX)))
++#define GETDTABLESIZE_MAX() (int)sysconf(_SC_OPEN_MAX)
+ #else
+-#define GETDTABLESIZE() \
+-(dtablesize_cache?dtablesize_cache:(dtablesize_cache=getdtablesize()))
++#define GETDTABLESIZE_MAX() getdtablesize()
+ #endif /* SVR4 */
++#define GETDTABLESIZE() \
++  (dtablesize_cache ? dtablesize_cache : \
++   (dtablesize_cache = (GETDTABLESIZE_MAX() >= FD_SETSIZE \
++                        ? FD_SETSIZE : GETDTABLESIZE_MAX())))
+ 
+ 
+ extern int      errno;
+--- xview-3.2p1.4.orig/lib/libxview/ttysw/term_ntfy.c
++++ xview-3.2p1.4/lib/libxview/ttysw/term_ntfy.c
+@@ -63,13 +63,15 @@ Pkg_private void ttysw_print_debug_strin
+ /* performance: global cache of getdtablesize() */
+ extern int      dtablesize_cache;
+ 
+-#if defined(SVR4) || defined(__linux__)
+-#define GETDTABLESIZE() \
+-(dtablesize_cache?dtablesize_cache:(dtablesize_cache=(int)sysconf(_SC_OPEN_MAX)))
++#ifdef SVR4
++#define GETDTABLESIZE_MAX() (int)sysconf(_SC_OPEN_MAX)
+ #else
++#define GETDTABLESIZE_MAX() getdtablesize()
++#endif /* SVR4 */
+ #define GETDTABLESIZE() \
+-        (dtablesize_cache?dtablesize_cache:(dtablesize_cache=getdtablesize()))
+-#endif
++  (dtablesize_cache ? dtablesize_cache : \
++   (dtablesize_cache = (GETDTABLESIZE_MAX() >= FD_SETSIZE \
++                        ? FD_SETSIZE : GETDTABLESIZE_MAX())))
+ 
+ Notify_value    ttysw_text_destroy();	/* Destroy func for termsw */
+ Notify_value    ttysw_text_event();	/* Event func for termsw */

@@ -1,0 +1,30 @@
+Description: Fix preprocessing errors in the 'shelltool' manpage.
+ For whatever reason, this manpage is preprocessed using 'cpp', so
+ lines that begin with '#' or contain '/*' will cause problems.
+
+--- xview-3.2p1.4.orig/clients/cmdtool/shelltool.man
++++ xview-3.2p1.4/clients/cmdtool/shelltool.man
+@@ -396,11 +396,11 @@ file:
+ .sp .5
+ .nf
+ .ft B
+-# dynamically set the name stripe of the tool:
++\(sh dynamically set the name stripe of the tool:
+ alias header 'echo \-n "\eE]l\e!*\eE\e"'
+-# dynamically set the label on the icon:
++\(sh dynamically set the label on the icon:
+ alias iheader 'echo \-n "\eE]L\e!*\eE\e"'
+-# dynamically set the image on the icon:
++\(sh dynamically set the image on the icon:
+ alias icon 'echo \-n "\eE]I\e!*\eE\e"'
+ .fi
+ .RE
+@@ -413,7 +413,7 @@ alias icon 'echo \-n "\eE]I\e!*\eE\e"'
+ .TP
+ .B /usr/bin/xview/shelltool
+ .TP
+-.B /usr/demo/*
++.B /usr/demo\(sl*
+ .PD
+ .SH "SEE ALSO"
+ .LP
