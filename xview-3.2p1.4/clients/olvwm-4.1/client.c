@@ -179,7 +179,7 @@ Display	*dpy;
 {
 	int	*ledMap;
 	int	i,numLeds;
-	unsigned int nitems,nremain;
+	unsigned long nitems,nremain;
 
 	DoingWindowState = False;
 
@@ -780,7 +780,8 @@ ClientProcessDragDropInterest(cli, state)
     int state;		/* PropertyNewValue or PropertyDelete */
 {
     unsigned long *data;
-    int nitems, remain, nsites, i, areatype, nelts;
+    unsigned long nitems, remain;
+    int nsites, i, areatype, nelts;
     int cur = 0;
     Window wid;
     unsigned long sid, flags;
