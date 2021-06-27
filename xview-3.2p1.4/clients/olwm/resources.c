@@ -926,8 +926,22 @@ cvtFont(dpy, item, string, addr)
     
     info = XLoadQueryFont(dpy, string);
 
+#if 0
     if (info == NULL)
 	return False;
+#else
+    if (info == NULL) {
+       /* ++roman: Unfortunately olvwm crashes if it has NULL pointers to
+        * fonts :-( So try to load a default font if the requested failed. */
+       fprintf( stderr, "failed to load font `%s' -- using `fixed' instead\n",
+                string );
+       info = XLoadQueryFont(dpy, "fixed" );
+       if (!info) {
+           fprintf( stderr, "failed to load `fixed' too -- expect a crash\n" );
+           return False;
+       }
+    }
+#endif
 
     *dest = info;
     return True;
