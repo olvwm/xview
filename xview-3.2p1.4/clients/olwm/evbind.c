@@ -764,6 +764,7 @@ polyStringToModifier(dpy, str)
  */
 static int
 parseKeySpec(dpy, specifier, syms)
+    Display *dpy;
     char *specifier;
     modsym *syms;
 {
