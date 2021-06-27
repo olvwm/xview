@@ -262,6 +262,7 @@ initPointer(dpy, cmap, data, pointer)
     char *our_copy, *ptr;
     Bool end = False;
     int cursor_id;
+    long cursor_id_long;
     char *font_file = NULL;
     char *cursor_id_p;
 
@@ -274,7 +275,8 @@ initPointer(dpy, cmap, data, pointer)
 	    end = True;
 	else *ptr = '\0';
 	    
-	if (st_lookup(cursorTable, our_copy, &cursor_id)) {
+	if (st_lookup(cursorTable, our_copy, &cursor_id_long)) { /* st_lookup wants memory of the size of a pointer */
+	    cursor_id_long = cursor_id;
 	    if (our_copy[0] == 'X')
 		font_file = "cursor";
 	    else if (our_copy[0] == 'O')
