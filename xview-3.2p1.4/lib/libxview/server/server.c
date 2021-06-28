@@ -1670,16 +1670,17 @@ server_get_atom_type(server_public, atom)
     Xv_Server       server_public;
     Atom            atom;
 {
-    Server_atom_type    type;
+    XPointer           xp;
     Server_info        *server = SERVER_PRIVATE(server_public);
 
 
     if (XFindContext(server->xdisplay, server->atom_mgr[TYPE], 
-		     (XContext) atom, (caddr_t *)&type) != XCNOENT)
-	return ((Server_atom_type) type);
+		     (XContext) atom, &xp) != XCNOENT)
+	return ((Server_atom_type) xp);
     else {
 	char *atomName;
 	const Server_atom2type *tbl;
+	Server_atom_type    type;
 
 	if ((int) atom <= XA_LAST_PREDEFINED)      /* Cache predefined atoms */
 		return (save_atom(server, atom, SERVER_WM_UNKNOWN_TYPE));
