@@ -29,7 +29,7 @@ frame_layout(frame_public, child, op, d1, d2, d3, d4, d5)
     register Xv_Window	child;
     Window_layout_op	op;
 /* Alpha compatibility, mbuck@debian.org, FIXME: I don't understand this */
-#if defined(__alpha)
+#if defined(__alpha) || defined(__amd64__)
     unsigned long       d1, d2, d3, d4, d5;
 #else
     int             	d1, d2, d3, d4, d5;

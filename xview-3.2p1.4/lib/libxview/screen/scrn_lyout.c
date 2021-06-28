@@ -24,7 +24,7 @@ screen_layout(root, child, op, d1, d2, d3, d4, d5)
     register Xv_Window child;
     Window_layout_op op;
 /* Alpha compatibility, mbuck@debian.org */
-#if defined(__alpha)
+#if defined(__alpha) || defined(__amd64__)
     unsigned long *d1, *d2, *d3, *d4, *d5;
 #endif
 {
