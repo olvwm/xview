@@ -493,7 +493,7 @@ make_image (w, h, kd)
 init_images (c, w, h)
 	Clock c; int w, h;
 {
-	int now;
+	time_t now;
 	struct tm *tm;
 
 	/* resize the remote images */
