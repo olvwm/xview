@@ -3460,7 +3460,7 @@ Font_locale_info	*linfo;
     linfo->default_small_font = 
 	strdup("-b&h-lucida-medium-r-*-*-*-100-*-*-*-*-*-*");
     linfo->default_medium_font = 
-	strdup("-b&h-lucida-medium-r-*-*-*-120-*-*-*-*-*-*");
+	strdup("fixed");
     linfo->default_large_font = 
 	strdup("-b&h-lucida-medium-r-*-*-*-140-*-*-*-*-*-*");
     linfo->default_xlarge_font = 
