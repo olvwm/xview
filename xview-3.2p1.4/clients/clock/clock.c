@@ -1047,7 +1047,7 @@ icon_repaint (i, pw, area)
 	Pixwin *pw;
 	Rectlist *area;
 {
-	int now;
+	time_t now;
 	Font_string_dims size;
 	struct tm *tm;
 	Clock c;
