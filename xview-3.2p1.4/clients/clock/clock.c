@@ -214,7 +214,7 @@ typedef struct clckObject {
 Server_image	handspr;
 Server_image	spotpr;
 Server_image	dotspr;
-Server_image	tempr;
+Server_image	tempr = NULL;
 Server_image	iconpr;
 Server_image	iconhandspr;
 Server_image	icondotspr;
