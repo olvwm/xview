@@ -487,6 +487,7 @@ xv_find_proper_gc(display, info, op)
 		    }
 		    new->depth = depth;
 		    new->next = NULL;
+		    new->clipping_set = FALSE;
 
 		    /*
 		     * Newly created GC. If clipping is enabled on the
