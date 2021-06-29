@@ -1709,6 +1709,7 @@ init_display (c)
 			exit(0);
 		}
 	}
+	bzero(d->images, sizeof(d->images));
 }
 
 static void
