@@ -4282,10 +4282,8 @@ int			*min_char;
 	return((XID)NULL);
     }
 
-    for (style_index=0, cur_style = known_styles[style_index];
-	 style_index < FONT_NUM_KNOWN_STYLES;
-	 cur_style = known_styles[++style_index])  {
-
+    for (style_index=0; style_index < FONT_NUM_KNOWN_STYLES; style_index++) {
+	cur_style = known_styles[style_index];
 	/*
 	 * Try for every style that is equivalent to the one for this font
 	 */
