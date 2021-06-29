@@ -94,6 +94,7 @@ icon_init(parent, object, avlist)
     icon->ic_gfxrect.r_height = 64;
     rect_construct(&recticon, 0, 0, 64, 64);
     icon->workspace_color = (char *)malloc (sizeof(char)*12);
+    icon->workspace_color[0] ='\0';
     xv_set(object,
 	   XV_SHOW, FALSE,
 	   WIN_CONSUME_EVENT, WIN_REPAINT,
