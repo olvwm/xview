@@ -202,10 +202,10 @@ xv_free_filter_table(table)
 {
     int             i;
     for (i = 0; table[i] != NULL; i++) {
-	cfree((char *) table[i]->call);
+	free((char *) table[i]->call);
 	free((char *) table[i]);
     }
-    cfree((char *) table);
+    free((char *) table);
 }
 
 static struct CharAction
