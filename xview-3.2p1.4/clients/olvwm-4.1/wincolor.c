@@ -448,8 +448,12 @@ InstallPointerColormap(dpy, root, rootx, rooty, setfocusclient)
  * Turn off colormap-locked mode.
  */
 void
-UnlockColormap(dpy, root, rootx, rooty)
-    Display *dpy;
+UnlockColormap(
+    Display *dpy,
+    int root,
+    int rootx,
+    int rooty
+)
 {
     WinGeneric *rootinfo = WIGetInfo(root);
 
@@ -512,13 +516,13 @@ TrackSubwindows(cli)
 {
     Display	    *dpy = cli->dpy;
     Window	    pane = PANEWINOFCLIENT(cli);
-    unsigned long   nItems, remain;
+    unsigned long   remain;
     Window	    *cmapwindata;
     List	    **last;
     List	    *oldlist;
     List	    *l;
     WinGeneric	    *cmwi;
-    int		    i;
+    int		    nItems, i;
     WinGenericPane  *paneinfo = PANEOFCLIENT(cli);
 
     if (!PropGetWMColormapWindows(dpy,pane,&cmapwindata,&nItems))
