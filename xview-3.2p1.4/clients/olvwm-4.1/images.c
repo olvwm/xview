@@ -22,6 +22,7 @@
 #include "globals.h"
 #include "win.h"
 #include "menu.h"
+#include "mem.h"
 
 /*
  *      Frame/icon menu action procs
