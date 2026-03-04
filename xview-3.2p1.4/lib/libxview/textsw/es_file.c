@@ -290,15 +290,23 @@ es_file_append_error(error_buf, file_name, status)
 	    (void) strcat(error_buf, XV_MSG("alloc failure"));
 	    break;
 	  default:
+#if defined(__linux__) && defined(__GLIBC__)
+#else
 	    if (errno <= 0 || errno >= sys_nerr)
 		goto Default;
+#endif
 	    (void) sprintf(first_free_in_buf, 
 #ifdef OW_I18N
 			XV_MSG("file '%ws': %s"),
 #else
 			XV_MSG("file '%s': %s"),
 #endif
-			   file_name, sys_errlist[errno]);
+			   file_name,
+#if defined(__linux__) && defined(__GLIBC__)
+			   strerror(errno));
+#else
+			   sys_errlist[errno]);
+#endif
 	    break;
 	}
 	break;

@@ -1109,7 +1109,11 @@ InternalError:
 	    XV_MSG("Unable to Include File."));
 	notice_msg2 = XV_MSG("An INTERNAL ERROR has occurred.");
     }
+#if defined(__linux__) && defined(__GLIBC__)
+    sys_msg = strerror(errno);
+#else
     sys_msg = (errno > 0 && errno < sys_nerr) ? sys_errlist[errno] : NULL;
+#endif
 
     frame = (Frame)FRAME_FROM_FOLIO_OR_VIEW(view);
     text_notice = (Xv_Notice)xv_get(frame, 
@@ -1211,7 +1215,11 @@ InternalError:
 	    XV_MSG("Unable to Include File."));
 	notice_msg2 = XV_MSG("An INTERNAL ERROR has occurred.");
     }
+#if defined(__linux__) && defined(__GLIBC__)
+    sys_msg = strerror(errno);
+#else
     sys_msg = (errno > 0 && errno < sys_nerr) ? sys_errlist[errno] : NULL;
+#endif
 
     frame = FRAME_FROM_FOLIO_OR_VIEW(view);
     text_notice = (Xv_Notice)xv_get(frame, 
@@ -2289,7 +2297,11 @@ Error:
 		   (might_not_be_dir ? 
 		   XV_MSG("Unable to access file") : 
 		   XV_MSG("Unable to cd to directory")));
+#if defined(__linux__) && defined(__GLIBC__)
+    sys_msg = strerror(errno);
+#else
     sys_msg = (errno > 0 && errno < sys_nerr) ? sys_errlist[errno] : NULL;
+#endif
 
     frame = FRAME_FROM_FOLIO_OR_VIEW(textsw);
     text_notice = (Xv_Notice)xv_get(frame, 
@@ -2394,7 +2406,11 @@ Error:
 		   XV_MSG("Cannot cd to directory")),
 		   full_pathname);
     free(full_pathname);
+#if defined(__linux__) && defined(__GLIBC__)
+    sys_msg = strerror(errno);
+#else
     sys_msg = (errno > 0 && errno < sys_nerr) ? sys_errlist[errno] : NULL;
+#endif
     if (sys_msg)
 	strcat(err_msgs, sys_msg);
     return (result);

@@ -22,3 +22,8 @@ clients :
 
 install-clients :
 	(cd xview-3.2p1.4; make SUBDIRS='clients' install)
+
+clean :
+	(cd xview-3.2p1.4; make clean distclean Clean)
+	(cd xview-3.2p1.4; bash Build-LinuxXView.bash clean)
+	rm -rf xview-3.2p1.4/build

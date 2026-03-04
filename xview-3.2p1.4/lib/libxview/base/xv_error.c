@@ -117,11 +117,15 @@ xv_error_format(object, avlist)
     switch (layer) {
       case ERROR_SYSTEM:
 	layer_name = XV_MSG("System");
+#if defined(__linux__) && defined(__GLIBC__)
+	sprintf(layer_msg, "%s", strerror(errno));
+#else
 	if ((int) errno < sys_nerr)
 	    sprintf(layer_msg, "%s", sys_errlist[(int) errno]);
 	else
 	    sprintf(layer_msg, XV_MSG("unix error %d"), 
 		(int) errno);
+#endif
 	break;
       case ERROR_SERVER:
 	layer_name = XV_MSG("Server");
