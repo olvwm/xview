@@ -92,3 +92,11 @@ All additional patches or contributions made on top of the existing code,
 specifically, all changes that were made to the code after git commit id
 6e1142503013ec9106199591b1353776a6b2bcf6
 are licensed under GPLv3 as described in [LICENSE](LICENSE)
+
+See also
+--------
+There are a couple of other folks who also seem to be interested in maintaining
+or at least keeping copies of the xview (and/or olvwm) code. I've documented
+the ones that are available on Github in [awesome_xview.md](awesome_xview.md)
+
+If you find any other such resources, please feel free to send in a pull request
