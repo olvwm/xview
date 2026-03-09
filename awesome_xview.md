@@ -10,4 +10,6 @@ These are some of the other xview related repos that I found on Github:
 - [retro-vault/open-look](https://github.com/retro-vault/open-look)
 	Appears to be an attempt to use CMake instead of the original Imake to
 	build a WM (olvw) based only on olgx (no more xview deps).
+- [ThomasAdam/xview](https://github.com/ThomasAdam/xview)
+	Appears to be yet another copy of xview-3.2p1.4-25.16.zip, no mods
 - ptribble's [version for Illumos](https://github.com/ptribble/xview-illumos)
