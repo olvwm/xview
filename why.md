@@ -38,7 +38,7 @@ drivers that were not available on Solaris, I made the transition (maybe
 ~10 years ago) moving to Linux/Ubuntu when I found that a port of olvwm/xview
 existed for Debian (and by extension, on Ubuntu).
 
-Here's a handy link for everything you need to know to run [olvwm on Ubuntu](http://mlab.no/blog/2015/11/olvwm-on-ubuntu/)
+Here's a handy link for everything you need to know to run [olvwm on Ubuntu](https://web.archive.org/web/20210123234145/http://mlab.no/blog/2015/11/olvwm-on-ubuntu/)
 
 There is an older link (with some outdated info) about [xview on various OSes](https://archive.physionet.org/physiotools/xview/)
 (Note: this site also has links to download the "lucida" fonts that are needed
