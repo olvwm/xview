@@ -1,0 +1,18 @@
+DISTRO=$(sh -c 'grep ^ID= /etc/os-release | cut -d= -f2 | tr -d "\""')
+
+if [ -x "$(command -v apt-get)" ]; then
+	apt-get install -y xutils-dev libx11-dev libxt-dev libxext-dev libxpm-dev bison flex
+elif [ -x "$(command -v dnf)" ]; then
+	# not tested
+	dnf -y libX11-devel libXt-devel libXext-devel libXpm-devel bison flex autoconf automake libtool pkgconfig
+elif [ -x "$(command -v pacman)" ]; then
+	# not tested
+	pacman -S --noconfirm --needed xorg-util-macros xorg-xmake libx11 libxt libxext libxpm bison flex autoconf automake libtool pkg-config
+elif [ -x "$(command -v nix-shell)" ]; then
+	# not tested
+	nix-shell
+elif [ -x "$(command -v zypper)" ]; then
+	# zypper install -y ...
+elif [ -x "$(command -v apk)" ]; then
+	# apk add ...
+fi
