@@ -186,7 +186,6 @@ MatchAttr(cmd,name)
 {
 	int		i,equalindex;
 	char		*equalpos;
-	char		*strchr();
 
 	equalpos = strchr(name,'=');
 
