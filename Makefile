@@ -16,6 +16,14 @@ install-libs :
 olvwm :
 	(cd xview-3.2p1.4; bash Build-LinuxXView.bash olvwm)
 
+olvwmauto : olgxauto ../build/bin/olvwm
+
+../build/bin/olvwm : xview-3.2p1.4/clients/olvwm-4.1/olvwm
+	(cd xview-3.2p1.4/clients/olvwm-4.1 ; make install)
+
+xview-3.2p1.4/clients/olvwm-4.1/olvwm : xview-3.2p1.4/clients/olvwm-4.1/Makefile
+	(cd xview-3.2p1.4/clients/olvwm-4.1 ; make)
+
 install-olvwm :
 	(cd xview-3.2p1.4/clients; make SUBDIRS='olvwm-4.1' install)
 

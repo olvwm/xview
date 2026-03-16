@@ -65,6 +65,7 @@ AC_CONFIG_FILES([
 	Makefile
 	lib/Makefile
 	lib/libolgx/Makefile
+	clients/olvwm-4.1/Makefile
 ])
 
 AC_OUTPUT
