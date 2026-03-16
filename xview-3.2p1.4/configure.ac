@@ -67,6 +67,7 @@ AC_CONFIG_FILES([
 	lib/libolgx/Makefile
 	clients/olvwm-4.1/Makefile
 	clients/olwm/Makefile
+	lib/pixrect/Makefile
 ])
 
 AC_OUTPUT

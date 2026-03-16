@@ -54,6 +54,9 @@ xview-3.2p1.4/m4/libtool.m4 : xview-3.2p1.4/configure.ac
 	(cd xview-3.2p1.4/lib/libolgx ; mkdir -p ../../../../build/include/olgx)
 	(cd xview-3.2p1.4/lib/libolgx ; make $$(realpath ../../../../build/include/olgx/olgx.h))
 
+../build/include/pixrect : xview-3.2p1.4/lib/pixrect/Makefile
+	(cd xview-3.2p1.4/lib/pixrect ; make install)
+
 autoclean :
 	git clean -fdx
 

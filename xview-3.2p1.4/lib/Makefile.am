@@ -5,4 +5,6 @@ lib_LTLIBRARIES = libolgx.la
 
 # Install headers
 olgxincludedir = $(includedir)/olgx
+pixrectincludedir = $(includedir)/pixrect
+
 dist_olgxinclude_HEADERS = libolgx/olgx.h
