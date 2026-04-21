@@ -68,6 +68,41 @@ AC_CONFIG_FILES([
 	clients/olvwm-4.1/Makefile
 	clients/olwm/Makefile
 	lib/pixrect/Makefile
+	lib/libxview/Makefile
+	lib/libxview/misc/Makefile
+	lib/libxview/base/Makefile
+	lib/libxview/attr/Makefile
+	lib/libxview/notify/Makefile
+	lib/libxview/font/Makefile
+	lib/libxview/window/Makefile
+	lib/libxview/screen/Makefile
+	lib/libxview/win/Makefile
+	lib/libxview/rect/Makefile
+	lib/libxview/canvas/Makefile
+	lib/libxview/openwin/Makefile
+	lib/libxview/pw/Makefile
+	lib/libxview/panel/Makefile
+	lib/libxview/frame/Makefile
+	lib/libxview/color/Makefile
+	lib/libxview/defaults/Makefile
+	lib/libxview/fullscreen/Makefile
+	lib/libxview/cursor/Makefile
+	lib/libxview/menu/Makefile
+	lib/libxview/scrollbar/Makefile
+	lib/libxview/icon/Makefile
+	lib/libxview/dnd/Makefile
+	lib/libxview/selection/Makefile
+	lib/libxview/file_chooser/Makefile
+	lib/libxview/notice/Makefile
+	lib/libxview/io_stream/Makefile
+	lib/libxview/string_utils/Makefile
+	lib/libxview/filter/Makefile
+	lib/libxview/wmgr/Makefile
+	lib/libxview/sel/Makefile
+	lib/libxview/textsw/Makefile
+	lib/libxview/ttysw/Makefile
+	lib/libxview/server_image/Makefile
+	lib/libxview/server/Makefile
 ])
 
 AC_OUTPUT

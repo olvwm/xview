@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# setup : install all of the header files required for the build
+
+# Copyright (C) 2026 olvwm.xview@gmail.com
+# SPDX-License-Identifier: GPL-3.0-only
+
+(cd misc ; make install)
+(cd base ; make install)
+(cd attr ; make install)
+(cd notify ; make install)
+(cd font ; make install)
+(cd server ; make install)
+(cd window ; make install)
+(cd screen ; make install)
+(cd win ; make install)
+(cd rect ; make install)
+(cd canvas ; make install)
+(cd openwin ; make install)
+(cd pw ; make install)
+(cd panel ; make install)
+(cd frame ; make install)
+(cd screen ; make install)
+(cd color ; make install)
+(cd defaults ; make install)
+(cd server_image ; make install)
+(cd fullscreen ; make install)
+(cd cursor ; make install)
+(cd menu ; make install)
+(cd scrollbar ; make install)
+(cd icon ; make install)
+(cd dnd ; make install)
+(cd selection ; make install)
+(cd file_chooser ; make install)
+(cd notice ; make install)
+(cd io_stream ; make install)
+(cd string_utils ; make install)
+(cd filter ; make install)
+(cd wmgr ; make install)
+(cd sel ; make install)
+(cd textsw ; make install)
+(cd ttysw ; make install)

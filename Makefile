@@ -33,6 +33,14 @@ clients :
 install-clients :
 	(cd xview-3.2p1.4; make SUBDIRS='clients' install)
 
+xviewauto : olgxauto ../build/include/pixrect ../build/include/xview_private ../build/include/xview
+
+../build/include/xview_private : xview-3.2p1.4/lib/libxview/setup
+	(cd xview-3.2p1.4/lib/libxview ; ./setup)
+
+../build/include/xview : xview-3.2p1.4/lib/libxview/Makefile
+	(cd xview-3.2p1.4/lib/libxview ; make && make install)
+
 olgxauto : ../build/lib/libolgx.so
 
 ../build/lib/libolgx.so : xview-3.2p1.4/lib/libolgx/.libs/libolgx.so
