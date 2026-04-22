@@ -475,4 +475,4 @@ libxview_la_SOURCES = \
 	wmgr/wmgr_state.c \
 	# keep this list sorted using : ls */*.c | sort
 
-AM_CPPFLAGS = $(SYS_INCLUDES) -std=c89 -D_GNU_SOURCE -DX11R6
+AM_CPPFLAGS = $(SYS_INCLUDES) -std=c89 -D_GNU_SOURCE -DX11R6 -I/usr/include/tirpc -fcommon

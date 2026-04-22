@@ -29,7 +29,7 @@ LT_INIT
 
 # Compiler flags
 AC_SUBST([CFLAGS], ["-O2 -fPIC"])
-SYS_INCLUDES="-isystem ${prefix}/include"
+SYS_INCLUDES="-I ${prefix}/include"
 AC_SUBST([SYS_INCLUDES])
 
 # Checks for header files.

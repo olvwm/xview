@@ -18,10 +18,14 @@
 
 #include <stdio.h>
 #include <sys/types.h>
+
+#ifndef __linux__
 #include <sys/signal.h>  /* sigset_t */
 #include <sys/wait.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#endif
+
 #include <xview/base.h>
 #ifndef __linux__
 # ifdef SYSV_WAIT
